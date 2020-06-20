@@ -62,6 +62,15 @@ export class AppComponent implements OnInit {
     if (this.message !== '') {
       this.displayMessage(this.message, false);
 
+      if (this.stacy.VALID_PAGE_REQUEST.test(this.message)) {
+        return this.displayMessage(await this.stacy.say('NAVIGATE', this.message));
+      }
+
+      if (this.message.toLowerCase().includes('search')) {
+        const messageWithoutKeyword = this.message.toLowerCase().replace('search', '').trim();
+        return this.displayMessage(await this.stacy.say('TITLE', messageWithoutKeyword));
+      }
+
       if (this.stacy.VALID_MOVIE_REQUEST.test(this.message)) {
         return this.displayMessage(await this.stacy.say('POSITIVE', this.message));
       }

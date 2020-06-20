@@ -33,7 +33,10 @@ const StacyCommands = {
     'Chilled'
   ],
   NEGATIVE: ['No', 'Nah', 'Nada', 'Zip', 'Nope', 'Neh'],
-  RANDOM: ['Hey, do you know fishes can swim? Lol. I joked.']
+  RANDOM: ['Hey, do you know fishes can swim? Lol. I joked.'],
+  TITLE: [''],
+  NAVIGATE: [''],
+  SEARCH: [''],
 };
 
 type Commands = typeof StacyCommands;
