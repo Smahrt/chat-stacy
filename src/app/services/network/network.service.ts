@@ -3,10 +3,9 @@ import { Observable, Subject } from 'rxjs';
 
 declare const Offline: any;
 
-export enum NetworkState {
-  Offline,
-  Online,
-  Reconnecting
+export interface NetworkState {
+  message: string;
+  color: string;
 }
 
 @Injectable({
@@ -24,7 +23,6 @@ export class NetworkService {
         },
         active: 'image'
       },
-      interceptRequests: true,
       reconnect: {
         initialDelay: 3,
         delay: 5
@@ -32,23 +30,19 @@ export class NetworkService {
     };
 
     Offline.on('up', () => {
-      this.networkStatus$.next(NetworkState.Online);
+      this.networkStatus$.next({ message: 'Online', color: 'palegreen' });
     });
 
     Offline.on('reconnect:connecting', () => {
-      this.networkStatus$.next(NetworkState.Reconnecting);
+      this.networkStatus$.next({ message: 'Reconnecting...', color: 'palegoldenrod' });
     });
 
     Offline.on('down', () => {
-      this.networkStatus$.next(NetworkState.Offline);
+      this.networkStatus$.next({ message: 'Offline', color: 'palevioletred' });
     });
   }
 
   public networkChanges(): Observable<NetworkState> {
     return this.networkStatus$.asObservable();
-  }
-
-  public getCurrentState(): NetworkState {
-    return Offline.state === 'up' ? NetworkState.Online : NetworkState.Offline;
   }
 }

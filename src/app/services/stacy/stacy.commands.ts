@@ -20,7 +20,18 @@ const StacyCommands = {
     'Oh well, I tried. Just quote a title next time, it is that simple',
     'Oops, even I wasn\'t expecting that 🤭'
   ],
-  POSITIVE: ['Yes', 'Yup', 'Yeah', 'Yas', 'Yaas', 'Yelz', 'Yippie', 'Oui', 'Beni', 'Okay', 'Alright', 'Go', 'Do it'],
+  POSITIVE: [
+    'Yes', 'Yup',
+    'Yeah', 'Yas',
+    'Yaas', 'Yelz',
+    'Yippie', 'Oui',
+    'Beni', 'Okay',
+    'Alright', 'Go',
+    'Do it', 'Fine',
+    'Well', 'Good',
+    'Great', 'Nice',
+    'Chilled'
+  ],
   NEGATIVE: ['No', 'Nah', 'Nada', 'Zip', 'Nope', 'Neh'],
   RANDOM: ['Hey, do you know fishes can swim? Lol. I joked.']
 };

@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
 
   private mutationObserver: MutationObserver;
 
-  public offlineIndicator = { message: 'Online', color: 'palegreen' };
+  public networkStatus: NetworkState = { message: 'Online', color: 'palegreen' };
 
   public message: string;
   public messages: Message[] = [];
@@ -35,19 +35,7 @@ export class AppComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.network.networkChanges().subscribe(status => {
-      console.log(status);
-      if (status === NetworkState.Offline) {
-        this.offlineIndicator = { message: 'Offline', color: 'palevioletred' };
-        console.log(this.offlineIndicator);
-      }
-
-      if (status === NetworkState.Online) {
-        this.offlineIndicator = { message: 'Online', color: 'palegreen' };
-      }
-
-      if (status === NetworkState.Reconnecting) {
-        this.offlineIndicator = { message: 'Reconnecting...', color: 'palegoldenrod' };
-      }
+      this.networkStatus = status;
       this.ref.detectChanges();
     });
 
