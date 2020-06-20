@@ -48,7 +48,7 @@ export class StacyService {
   private async searchMovie(title: string) {
     try {
       const { Response, Plot, Title, Year, Director, Genre }: ApiResponse = await this.http
-        .get(`http://www.omdbapi.com/?apikey=${this.OMDB_API_KEY}&t=${title}&plot=short`)
+        .get(`https://www.omdbapi.com/?apikey=${this.OMDB_API_KEY}&t=${title}&plot=short`)
         .toPromise() as any;
 
       return Response === 'True'
