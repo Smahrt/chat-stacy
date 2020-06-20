@@ -78,7 +78,7 @@ export class AppComponent implements OnInit {
         return this.displayMessage(await this.stacy.say('POSITIVE', this.message));
       }
 
-      if (this.commandToRegex('POSITIVE').test(this.message)) {
+      if (this.commandToRegex('POSITIVE', 'GREETING').test(this.message)) {
         return this.displayMessage(await this.stacy.say('PROMPT'));
       }
 
