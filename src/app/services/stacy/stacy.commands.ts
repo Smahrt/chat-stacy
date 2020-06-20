@@ -1,12 +1,15 @@
 const StacyCommands = {
   GREETING: ['Hi', 'Hello 😊', 'Hi, I\'m Stacy.', 'Howdy', 'Holla'],
   INTRODUCTION: [
-    'I could help you find a movie. Just quote what you want to search for.<br><br> Wanna try?',
+    `I could help you find a movie.
+    Just quote a movie title or type <strong>search</strong> followed by your search term to find a movie.
+    <br><br> Wanna try?`,
     'I happen to know a lot about movies. Just quote a title and I\'ll tell you about the movie.'
   ],
   PROMPT: [
-    'Just quote the title of the movie you want to search for.',
-    'You could try searching for \'Titanic\''
+    'Just quote the title of the movie or type <strong>search</strong> followed by your search term to find a movie',
+    'You could try <strong>search avengers</strong>',
+    'You could try typing \'Titanic\' with the quotes',
   ],
   PERSUADE: [
     'You sure?',
