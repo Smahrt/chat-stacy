@@ -42,7 +42,7 @@ export class StacyService {
   private extractTitle(message: string) {
     const tempTitle = message.match(this.VALID_MOVIE_REQUEST);
     const title = tempTitle ? tempTitle[0] : null;
-    return title.replace(/(\"|\'|\n)/, '').trim();
+    return title.replace(/(\"|\'|\n|\r|\t)/gi, '').trim();
   }
 
   private async searchMovie(title: string) {
