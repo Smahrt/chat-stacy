@@ -87,7 +87,7 @@ export class AppComponent implements OnInit {
       }
 
       if (this.stacy.VALID_MOVIE_REQUEST.test(this.message)) {
-        return this.displayMessage(await this.stacy.say('POSITIVE', this.message));
+        return this.displayMessage(await this.stacy.say('TITLE', this.message));
       }
 
       if (this.commandToRegex('POSITIVE', 'GREETING').test(this.message)) {

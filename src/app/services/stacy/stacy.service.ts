@@ -31,8 +31,8 @@ export class StacyService {
   private page = 1;
   private pages = 1;
 
-  public VALID_MOVIE_REQUEST = /(\"|\u201c|\u2018|\'){1}\n?.+\n?(\"|\u2019|\u201d|\'){1}/mi;
-  public VALID_PAGE_REQUEST = /(page{1}\s+\d+|(next){1}\s?(page)?)/mi;
+  public VALID_MOVIE_REQUEST = /(\'|\“|\”|\‘|\’\”){1}\n?.+\n?(\'|\“|\”|\‘|\’\”){1}/gmi;
+  public VALID_PAGE_REQUEST = /((page){1}\s+\d+|(next){1}\s?(page)?)/mi;
 
   constructor(private http: HttpClient) {
     this.searchHistory = this.getSearchHistory(false);
@@ -113,7 +113,7 @@ export class StacyService {
     if (!tempTitle) {
       return 'NOT_AVAILABLE';
     }
-    return tempTitle[0].replace(/(\"|\'|\u2019|\u201d|\u201c|\u2018|\n|\r|\t)/gi, '').trim();
+    return tempTitle[0].replace(/(\'|\“|\”|\‘|\’\”|\n|\r|\t)/gmi, '').trim();
   }
 
   private async fetchMovie(title: string) {
