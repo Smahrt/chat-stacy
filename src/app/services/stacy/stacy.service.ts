@@ -31,7 +31,7 @@ export class StacyService {
   private page = 1;
   private pages = 1;
 
-  public VALID_MOVIE_REQUEST = /(\"|\'){1}\n?.+\n?(\"|\'){1}/mi;
+  public VALID_MOVIE_REQUEST = /(\"|\“|\”|\'){1}\n?.+\n?(\"|\“|\”|\'){1}/mi;
   public VALID_PAGE_REQUEST = /(page{1}\s+\d+|(next){1}\s?(page)?)/mi;
 
   constructor(private http: HttpClient) {
