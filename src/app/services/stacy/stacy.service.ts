@@ -113,7 +113,7 @@ export class StacyService {
     if (!tempTitle) {
       return 'NOT_AVAILABLE';
     }
-    return tempTitle[0].replace(/(\"|\'|\n|\r|\t)/gi, '').trim();
+    return tempTitle[0].replace(/(\"|\'|\“|\”|\n|\r|\t)/gi, '').trim();
   }
 
   private async fetchMovie(title: string) {
