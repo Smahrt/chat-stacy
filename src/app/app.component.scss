@@ -69,6 +69,42 @@
   filter: grayscale(100%) opacity(0.1);
 }
 
+.suggestions {
+  padding-left: 0.75rem;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-top: 0.7rem;
+
+  &::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+
+  .suggestion {
+    display: inline-block;
+    padding: 0 0.75rem;
+    background-color: #d6d6d6;
+    box-sizing: border-box;
+    height: 24px;
+    width: fit-content;
+    line-height: 24px;
+    border-radius: 24px;
+    cursor: pointer;
+    margin-right: 0.75rem;
+
+    &.reset {
+      background-color: palevioletred;
+      color: #fff;
+    }
+  }
+
+  .suggestion:active {
+    border-radius: 24px;
+    background-color: #ffd393;
+  }
+}
+
 .message .body {
   max-width: 65%;
   padding: 16px;

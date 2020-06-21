@@ -2,14 +2,20 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { StacyCommand, getCommand } from './stacy.commands';
 
+const STORAGE_KEY = 'SEARCH_HISTORY';
+
 interface ApiResponse {
   Response: 'True' | 'False';
-  Plot: string;
+  Plot?: string;
   Title: string;
   Year: string;
-  Genre: string;
-  Director: string;
+  Genre?: string;
+  Director?: string;
+  SearchWeight?: number;
 }
+
+type SearchHistoryMap = Map<string, ApiResponse>;
+type SearchHistoryArray = [string, ApiResponse][];
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +23,8 @@ interface ApiResponse {
 
 export class StacyService {
   private OMDB_API_KEY = 'df4914cc';
+
+  private searchHistory: SearchHistoryMap = new Map();
 
   private movies: ApiResponse[] = [];
   private searchTerm = '';
@@ -26,7 +34,9 @@ export class StacyService {
   public VALID_MOVIE_REQUEST = /(\"|\'){1}\n?.+\n?(\"|\'){1}/mi;
   public VALID_PAGE_REQUEST = /(page{1}\s+\d+|(next){1}\s?(page)?)/mi;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.searchHistory = this.getSearchHistory(false);
+  }
 
   /**
    * Make Stacy say something
@@ -54,6 +64,42 @@ export class StacyService {
       command = 'ERROR';
     }
     return this.getMessage(command);
+  }
+
+  /**
+   * Get movie title suggestions
+   * @param input The user's input
+   * @returns A list of movie title suggestions
+   */
+  public getMovieTitleSuggestions(input: string) {
+    const terms = input
+      .toLowerCase()
+      .split(' ')
+      .filter(term => term.trim() !== '');
+
+    return Array.from(this.searchHistory.values())
+      // filter movies that contain any of the search term
+      .map(movie => {
+        movie.SearchWeight = terms.filter(term => movie.Title
+          .toLowerCase()
+          .trim()
+          .indexOf(term) > -1).length;
+        return movie;
+      })
+      // sort by the suggestions with the most matches
+      .sort((a, b) => b.SearchWeight - a.SearchWeight)
+      // return only the first 5 suggestions
+      .slice(0, 4)
+      // return only the movie title
+      .map(movie => movie.Title);
+  }
+
+  /**
+   * Resets movie suggestions. You will have to search again to access suggestions
+   */
+  public resetMovieSuggestions() {
+    this.searchHistory = new Map(); // reset local state
+    return localStorage.clear(); // reset local storage
   }
 
   private getMessage(command: StacyCommand): string {
@@ -115,6 +161,7 @@ export class StacyService {
         }
 
         this.movies = Search;
+        this.searchHistory = this.saveSearchHistory(this.movies);
         this.searchTerm = searchTerm;
         this.pages = Math.ceil(this.movies.length / 5);
       }
@@ -142,5 +189,18 @@ export class StacyService {
     this.page = 1;
     this.searchTerm = '';
     this.movies = [];
+  }
+
+  private saveSearchHistory(history: ApiResponse[]): SearchHistoryMap {
+    const oldHistory = this.getSearchHistory(false);
+    history.forEach(h => oldHistory.set(h.Title, h));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(oldHistory)));
+    return oldHistory;
+  }
+
+  private getSearchHistory<T extends boolean>(asArray: T): T extends true ? SearchHistoryArray : SearchHistoryMap {
+    const jsonString = localStorage.getItem(STORAGE_KEY) || '[]';
+    const arr = JSON.parse(jsonString) as [string, ApiResponse][];
+    return asArray ? arr : new Map(arr) as any;
   }
 }

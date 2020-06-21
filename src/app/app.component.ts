@@ -2,6 +2,8 @@ import { Component, OnInit, ElementRef, ViewChild, AfterViewChecked, ChangeDetec
 import { NetworkService, NetworkState } from './services/network/network.service';
 import { StacyService } from './services/stacy/stacy.service';
 import { getCommand, StacyCommand } from './services/stacy/stacy.commands';
+import { Subject, BehaviorSubject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 
 interface Message {
   body: string;
@@ -22,8 +24,11 @@ export class AppComponent implements OnInit {
 
   public networkStatus: NetworkState = { message: 'Online', color: 'palegreen' };
 
+  public inputListener$: Subject<Event> = new Subject();
   public message: string;
   public messages: Message[] = [];
+
+  public movieSuggestions: string[] = [];
 
   public stacyThinking = false;
 
@@ -38,6 +43,16 @@ export class AppComponent implements OnInit {
       this.networkStatus = status;
       this.ref.detectChanges();
     });
+
+    this.inputListener$
+      .pipe(
+        debounceTime(750),
+        distinctUntilChanged()
+      ).subscribe(() => {
+        this.movieSuggestions = this.message.length > 3
+          ? this.stacy.getMovieTitleSuggestions(this.message)
+          : [];
+      });
 
     this.displayMessage(await this.stacy.say('GREETING'));
     this.displayMessage(await this.stacy.say('INTRODUCTION'));
@@ -85,6 +100,27 @@ export class AppComponent implements OnInit {
 
       return this.displayMessage(await this.stacy.say('ERROR'));
     }
+  }
+
+  /**
+   * Applies a movie suggestion to the chat window
+   */
+  public async applySuggestion(title: string) {
+    const messageTitle = `"${title}"`;
+    this.displayMessage(messageTitle, false);
+    this.movieSuggestions = []; // reset suggestions
+    this.ref.detectChanges();
+    this.displayMessage(await this.stacy.say('TITLE', messageTitle));
+  }
+
+  /**
+   * Reset Suggestions
+   */
+  public resetSuggestions() {
+    this.movieSuggestions = []; // reset suggestions
+    this.message = '';
+    this.ref.detectChanges();
+    return this.stacy.resetMovieSuggestions();
   }
 
   private commandToRegex(...commands: StacyCommand[]) {

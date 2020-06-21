@@ -34,9 +34,17 @@
             </div>
           </div>
         </div>
+        <div class="suggestions" *ngIf="movieSuggestions.length > 0">
+          <div class="suggestion" (click)="applySuggestion(suggestion)" [tabIndex]="i+1"
+            *ngFor="let suggestion of movieSuggestions; let i = index">
+            {{ suggestion }}
+          </div>
+          <div class="suggestion reset" (click)="resetSuggestions()">&times; Reset Suggestions</div>
+        </div>
         <div class="input-area">
           <textarea spellcheck="true" autoComplete="true" autocorrect="true" rows="1" class="input"
-            [(ngModel)]="message" placeholder="Type message..." (keyup.enter)="sendMessage($event)">
+            [(ngModel)]="message" placeholder="Type message..." (keyup.enter)="sendMessage($event)"
+            (keyup)="inputListener$.next($event)">
           </textarea>
           <button (click)="sendMessage()" class="input-button">
             <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
