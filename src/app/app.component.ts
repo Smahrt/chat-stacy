@@ -152,6 +152,7 @@ export class AppComponent implements OnInit {
    * Resets the message input
    */
   private resetMessageInput(): void {
+    this.movieSuggestions = []; // reset suggestions
     this.message = '';
   }
 
